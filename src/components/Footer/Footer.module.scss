@@ -118,7 +118,27 @@
     display: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1199px) {
+    .logo {
+        padding-bottom: 24px;
+        border-bottom: 1px solid #295640;
+        color: #fff;
+        a {
+            display: flex;
+            justify-content: center;
+        }
+    }
+    .email {
+        padding: 12px;
+        border-radius: 6px;
+        background: #053b23;
+        flex-direction: column;
+        align-items: start;
+    }
+    .title {
+        padding: 0 0 1rem;
+        text-align: left;
+    }
     .wrapper {
         padding: 32px 15px 78px;
     }
@@ -163,28 +183,6 @@
         button {
             padding: 12px 14px;
         }
-    }
-}
-
-@media screen and (max-width: 991px) {
-    .logo {
-        padding-bottom: 24px;
-        border-bottom: 1px solid #295640;
-        color: #fff;
-    }
-}
-
-@media screen and (max-width: 1199px) {
-    .email {
-        padding: 12px;
-        border-radius: 6px;
-        background: #053b23;
-        flex-direction: column;
-        align-items: start;
-    }
-    .title {
-        padding: 0 0 1rem;
-        text-align: left;
     }
 }
 
@@ -275,5 +273,28 @@
     .form,
     .accordion {
         display: none;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1199px) {
+    .wrapper {
+        padding: 60px 60px 90px;
+    }
+    .email {
+        flex-direction: row;
+        gap: 20px;
+        align-items: center;
+
+        .title {
+            padding: 0;
+        }
+    }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1440px) {
+    .email {
+        flex-direction: column;
+        padding-right: 12px;
+        padding-bottom: 12px;
     }
 }
