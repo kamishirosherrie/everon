@@ -228,6 +228,9 @@ nav {
             height: -moz-fit-content;
             height: fit-content;
         }
+        .showMegaMenu {
+            transform: unset;
+        }
     }
     .menu-item {
         width: 100%;

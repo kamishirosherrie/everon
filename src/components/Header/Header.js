@@ -10,6 +10,9 @@ const cx = classNames.bind(styles)
 const Header = () => {
     const [menuIsActive, setMenuActive] = useState(false)
     const [burgerIsActive, setBurgerActive] = useState(false)
+    const [showMegaMenu, setShowMegaMenu] = useState(false)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1199)
+    const [resetMenuTrigger, setResetMenuTrigger] = useState(true)
 
     useEffect(() => {
         if (burgerIsActive) {
@@ -17,7 +20,12 @@ const Header = () => {
         } else {
             document.body.classList.remove('not-scroll')
         }
+
+        const handleResize = () => setIsMobile(window.innerWidth <= 1199)
+        window.addEventListener('resize', handleResize)
+
         return () => {
+            window.removeEventListener('resize', handleResize)
             document.body.classList.remove('not-scroll')
         }
     }, [burgerIsActive])
@@ -33,14 +41,19 @@ const Header = () => {
                         <ul>
                             <li
                                 className={cx('menu-item', { active: menuIsActive })}
-                                onMouseEnter={() => setMenuActive(true)}
-                                onMouseLeave={() => setMenuActive(false)}
+                                onMouseEnter={() => !isMobile && setMenuActive(true)}
+                                onMouseLeave={() => !isMobile && setMenuActive(false)}
                             >
-                                <span>
+                                <span onClick={() => isMobile && setShowMegaMenu(true)}>
                                     Sản phẩm
                                     <ChevronDownIcon />
                                 </span>
-                                <Dropdown className={cx('dropdown')} />
+                                <Dropdown
+                                    onClickBack={() => setShowMegaMenu(false)}
+                                    showMiniMenu={showMegaMenu}
+                                    resetMenuTrigger={resetMenuTrigger}
+                                    className={cx('dropdown', { showMegaMenu })}
+                                />
                             </li>
                         </ul>
                     </nav>
@@ -60,7 +73,13 @@ const Header = () => {
                         </div>
                         <div
                             className={cx('burger-icon', { active: burgerIsActive })}
-                            onClick={() => setBurgerActive((prev) => !prev)}
+                            onClick={() => {
+                                setBurgerActive((prev) => !prev)
+                                setMenuActive((prev) => !prev)
+                                setShowMegaMenu(false)
+                                setResetMenuTrigger((prev) => !prev)
+                                console.log(resetMenuTrigger)
+                            }}
                         >
                             <span></span>
                             <span></span>

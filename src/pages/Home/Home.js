@@ -33,8 +33,6 @@ const Home = () => {
                     <BrandSection />
                     <BrandSection brandName="Sông Hồng" />
                     <BrandSection brandName="Liên Á" />
-                    <BrandSection />
-                    <BrandSection />
                 </section>
             </div>
         </DefaultLayout>

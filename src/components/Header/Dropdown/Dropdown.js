@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './Dropdown.module.scss'
 import iconArrowRight from '../../../assets/images/icon-arrow-right.png'
@@ -302,38 +302,88 @@ const data = [
     },
 ]
 
-const Dropdown = ({ className }) => {
-    const [activeIndex, setActiveIndex] = useState(0)
+const Dropdown = ({ className, onClickBack, resetMenuTrigger }) => {
+    const [activeIndex, setActiveIndex] = useState(1)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1199)
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 1199)
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (!isMobile) {
+            setActiveIndex(0)
+        }
+    }, [isMobile])
+
+    useEffect(() => {
+        if (resetMenuTrigger) {
+            setActiveIndex(-1)
+        }
+    }, [resetMenuTrigger])
+
     return (
         <div className={className ? cx('wrapper', className) : cx('wrapper')}>
             <ul className={cx('list')}>
+                <li className={cx('back')} onClick={onClickBack}>
+                    <p>Quay lại</p>
+                </li>
                 {data.map((item, index) => (
                     <li
                         key={index}
-                        className={cx('item', { active: activeIndex === index })}
-                        onMouseEnter={() => setActiveIndex(index)}
+                        className={cx('item', { active: !isMobile && activeIndex === index })}
+                        onMouseEnter={() => !isMobile && setActiveIndex(index)}
                     >
-                        <a href={item.link}>
+                        <a
+                            href={isMobile ? '#' : item.link}
+                            onClick={(e) => {
+                                setActiveIndex(index)
+                                e.preventDefault()
+                            }}
+                        >
                             {item.brand}
                             <img src={iconArrowRight} alt="" className={cx('icon-arrow')} />
                         </a>
-                        <div className={cx('sub-list', { active: activeIndex === index })}>
-                            {item.catalog.map((catalog, catalogIndex) => (
-                                <ul key={catalogIndex} className={cx('products')}>
-                                    <li className={cx('sub-item')}>
-                                        <h4>
-                                            <a href={catalog.link}>{catalog.name}</a>
-                                        </h4>
-                                        <ul className={cx('category')}>
-                                            {catalog.category.map((cat, catIndex) => (
-                                                <li key={catIndex} className={cx('cat-item')}>
-                                                    <a href={cat.link}>{cat.name}</a>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </li>
-                                </ul>
-                            ))}
+                        <div
+                            className={cx('sub-list', {
+                                active: activeIndex === index,
+                                showSubMenu: activeIndex === index,
+                            })}
+                        >
+                            {isMobile && (
+                                <div className={cx('header')}>
+                                    <p className={cx('back')} onClick={() => setActiveIndex(-1)}>
+                                        Quay lại
+                                    </p>
+                                    <a href={item.link} className={cx('brand-name')}>
+                                        {item.brand}
+                                    </a>
+                                </div>
+                            )}
+
+                            <div className={cx('item-wrapper')}>
+                                {item.catalog.map((catalog, catalogIndex) => (
+                                    <ul key={catalogIndex} className={cx('products')}>
+                                        <li className={cx('sub-item')}>
+                                            <h4>
+                                                <a href={catalog.link}>{catalog.name}</a>
+                                            </h4>
+                                            <ul className={cx('category')}>
+                                                {catalog.category.map((cat, catIndex) => (
+                                                    <li key={catIndex} className={cx('cat-item')}>
+                                                        <a href={cat.link}>{cat.name}</a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                ))}
+                            </div>
                         </div>
                     </li>
                 ))}
